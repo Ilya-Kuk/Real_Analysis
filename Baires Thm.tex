@@ -1,0 +1,627 @@
+\documentclass{article}
+% Change "article" to "report" to get rid of page number on title page
+\usepackage{amsmath,amsfonts,amsthm,amssymb}
+\usepackage{setspace}
+\usepackage{Tabbing}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{extramarks}
+\usepackage{chngpage}
+\usepackage{soul,color}
+\usepackage{graphicx,float,wrapfig}
+\graphicspath{ {images/} }
+\usepackage{color}
+\usepackage{marvosym}
+
+% In case you need to adjust margins:
+\topmargin=-0.45in      %
+\evensidemargin=0in     %
+\oddsidemargin=0in      %
+\textwidth=6.5in        %
+\textheight=9.0in       %
+\headsep=0.25in         %
+
+% Homework Specific Information
+\newcommand{\hmwkTitle}{Project:\ Baire's Theorem}
+\newcommand{\hmwkDueDate}{Tuesday,\ May\ 9,\ 2017}
+\newcommand{\hmwkClass}{MAT\ 303}
+%\newcommand{\hmwkClassTime}{2:30}%
+%\newcommand{\hmwkClassInstructor}{Passino}%
+\newcommand{\hmwkAuthorName}{Ilya\ \ Kukovitskiy}
+
+% Setup the header and footer
+\pagestyle{fancy}                                                       %
+\lhead{\hmwkAuthorName}                                                 %
+\chead{\hmwkClass\ - \hmwkTitle}  %
+\rhead{\firstxmark}                                                     %
+\lfoot{\lastxmark}                                                      %
+\cfoot{}                                                                %
+\rfoot{Page\ \thepage\ of\ \pageref{LastPage}}                          %
+\renewcommand\headrulewidth{0.4pt}                                      %
+\renewcommand\footrulewidth{0.4pt}                                      %
+
+% This is used to trace down (pin point) problems
+% in latexing a document:
+%\tracingall
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Some tools
+\newcommand{\enterProblemHeader}[1]{\nobreak\extramarks{#1}{#1 continued on next page\ldots}\nobreak%
+                                    \nobreak\extramarks{#1 (continued)}{#1 continued on next page\ldots}\nobreak}%
+\newcommand{\exitProblemHeader}[1]{\nobreak\extramarks{#1 (continued)}{#1 continued on next page\ldots}\nobreak%
+                                   \nobreak\extramarks{#1}{}\nobreak}%
+
+\newlength{\labelLength}
+\newcommand{\labelAnswer}[2]
+  {\settowidth{\labelLength}{#1}%
+   \addtolength{\labelLength}{0.25in}%
+   \changetext{}{-\labelLength}{}{}{}%
+   \noindent\fbox{\begin{minipage}[c]{\columnwidth}#2\end{minipage}}%
+   \marginpar{\fbox{#1}}%
+
+   % We put the blank space above in order to make sure this
+   % \marginpar gets correctly placed.
+   \changetext{}{+\labelLength}{}{}{}}%
+
+\setcounter{secnumdepth}{0}
+\newcommand{\homeworkProblemName}{}%
+\newcounter{homeworkProblemCounter}%
+\newenvironment{homeworkProblem}[1][Problem \arabic{homeworkProblemCounter}]%
+  {\stepcounter{homeworkProblemCounter}%
+   \renewcommand{\homeworkProblemName}{#1}%
+   \section{\homeworkProblemName}%
+   \enterProblemHeader{\homeworkProblemName}}%
+  {\exitProblemHeader{\homeworkProblemName}}%
+
+\newcommand{\problemAnswer}[1]
+  {\noindent\fbox{\begin{minipage}[c]{\columnwidth}#1\end{minipage}}}%
+
+\newcommand{\problemLAnswer}[1]
+  {\labelAnswer{\homeworkProblemName}{#1}}
+
+\newcommand{\homeworkSectionName}{}%
+\newlength{\homeworkSectionLabelLength}{}%
+\newenvironment{homeworkSection}[1]%
+  {% We put this space here to make sure we're not connected to the above.
+   % Otherwise the changetext can do funny things to the other margin
+
+   \renewcommand{\homeworkSectionName}{#1}%
+   %\settowidth{\homeworkSectionLabelLength}{\homeworkSectionName}%
+   %\addtolength{\homeworkSectionLabelLength}{0.25in}%
+   %\changetext{}{-\homeworkSectionLabelLength}{}{}{}%
+   \subsection{\homeworkSectionName}%
+   \enterProblemHeader{\homeworkProblemName\ [\homeworkSectionName]}}%
+  {\enterProblemHeader{\homeworkProblemName}%
+
+   % We put the blank space above in order to make sure this margin
+   % change doesn't happen too soon (otherwise \sectionAnswer's can
+   % get ugly about their \marginpar placement.
+   \changetext{}{+\homeworkSectionLabelLength}{}{}{}}%
+
+\newcommand{\sectionAnswer}[1]
+  {% We put this space here to make sure we're disconnected from the previous
+   % passage
+
+   {\noindent\fbox{\begin{minipage}[c]{\columnwidth}#1\end{minipage}}}%
+   \enterProblemHeader{\homeworkProblemName}\exitProblemHeader{\homeworkProblemName}%
+       %\marginpar{\fbox{\homeworkSectionName}}%
+
+   % We put the blank space above in order to make sure this
+   % \marginpar gets correctly placed.
+   }%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Make title
+\title{\vspace{2in}\textmd{\textbf{\hmwkClass:\ \hmwkTitle}}\\\normalsize\vspace{0.1in}\small{Due\ on\ \hmwkDueDate}\\\vspace{0.1in}\large{\textit{\hmwkClassInstructor\ \hmwkClassTime}}\vspace{3in}}
+\date{}
+\author{\textbf{\hmwkAuthorName}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\begin{spacing}{1.1}
+\maketitle
+\newpage
+% Uncomment the \tableofcontents and \newpage lines to get a Contents page
+% Uncomment the \setcounter line as well if you do NOT want subsections
+%       listed in Contents
+%\setcounter{tocdepth}{1}
+\tableofcontents
+\newpage
+
+% When problems are long, it may be desirable to put a \newpage or a
+% \clearpage before each homeworkProblem environment
+
+\newpage
+
+\begin{homeworkProblem}[3.5.1]
+Argue that a set $A$ is a $G_\delta$ set $(i)$ if and $(ii)$ only if its complement is an $F_\sigma$ set.\\
+\problemAnswer{
+A set $A \subseteq R$ is called an $F_\sigma$ set if it can be written as the countable union of closed sets.\\
+%%I use $\Phi$ for closed sets, $\Phi$ as in F as in fuck it's closed.
+A set $B \subseteq R$ is called an $G_\delta$ set if it can be written as the countable intersection of open sets.
+%%I use $\Psi$ for open sets, *sigh* it's open. 
+}
+\problemAnswer{
+\underline{Proof}\\
+$(i)$\\
+$A^c$ is an $F_\sigma$ set. So $A^c = \bigcup^{m=\infty}_{n=1} \Phi_n$, where $\Phi_n$ are closed sets.\\
+$A=(A^c)^c=\bigcap^{m=\infty}_{n=1} \Phi_n^c$, by DeMorgan's Law.\\
+Note that since $\Phi_n$ are closed sets, $\Phi_n^c$ are open sets.\\
+So $A$ is a $G_\delta$ set, by definition.\\
+\\
+$(ii)$\\
+$A$ is a $G_\delta$ set. So $A = \bigcap^{m=\infty}_{n=1} \Psi_n$, where $\Psi_n$ are open sets.\\
+$A^c= \bigcup^{m=\infty}_{n=1} \Psi_n^c$, by DeMorgan's Law.\\
+Note that since $\Psi_n$ are open sets, $\Psi_n^c$ are closed sets.\\
+So $A^c$ is an $F_\sigma$ set, by definition.\\
+$\mathcal{QED}$
+}
+\end{homeworkProblem}
+
+\newpage
+\begin{homeworkProblem}[3.5.2]
+Replace each \underline{\qquad} with the word "finite" or "countable", depending
+on which is more appropriate.\\
+%%%%%%%%%%%%% Countable union of F_sigma is F_sigma. Finite intersection, then reverse for G_delta. The basic idea is that if it's already defined as a countable intersection/union of open/closed sets, then a countable intersection/union of them is still a countable intersection/union of open/closed sets. You might want to refer to a theorem or exercise from the section on countability regarding the countability of a countable collection of countable sets.
+\problemAnswer{
+\underline{Notes To Help}\\
+
+\left.
+\begin{array}{left}
+    &\text{Theorem 3.2.3 states:}\\
+    &\text{The arbitrary union of open sets is open}
+    \\
+    &\text{The finite intersection of open sets is open}
+    \\
+    &\text{Theorem 3.2.14 states:}
+    \\
+    &\text{The arbitrary intersection of closed sets is closed}
+    \\
+    &\text{The finite union of closed sets is closed}
+\end{array}
+\right\}
+\begin{array}{left}
+    &\text{These facts imply that $F_\sigma$ sets aren't always}\\
+    &\text{closed, and $G_\delta$ sets aren't always open.}
+\end{array}\\\\
+
+The union of intersections: $(A\cap B)\bigcup(C\cap D) = (A\cup C)\bigcap (A\cup D)\bigcap (B\cup C)\bigcap (B\cup D)$\\
+%Here is picure showing it
+%%%I should probably prove this lemma rigorously, right? And then induct on it, also checking for countability? Does that even work?
+%\includegraphics[scale=0.65]{Short_Set_Sentance} 
+%\includegraphics[scale=0.65]{Longer_Set_Sentance}\\\
+The intersection of unions behaves the same way.\\\
+
+The set $\mathbb{N}\times\mathbb{N}$ is countable. 'Skeleton of Proof' Consider the sum $a+b$ of the two components of each element $(a,b)$. The sum is certainly orderable, the minimum is two and then increases. The issue now is comparing, for example $(3,1)$ and $(2,2)$; when the sums are equal, order the ordered pair whose first element, $a$, is smaller. So of the elements that sum to $4$, the order would be $4_1=(1,3),\, 4_2=(2,2),\, 4_3=(3,1)$. Now, given any ordered pair of naturals, I can tell you which element it is. That means the set of ordered natural pairs is countable.
+}
+
+\begin{homeworkSection}{(a)}
+The \underline{\qquad} union of $F_\sigma$ sets in an $F_\sigma$ set.
+\sectionAnswer{
+Assume \underline{countable} and prove/disprove.\\
+$\bigcup^{\infty}_{m=1}(\cup^\infty_{n=1}\Phi_n)_m \overset{?}{=} F_\sigma$; where $\Phi_n$ are closed sets.\\
+Let $\Phi_n=A, B, \cdots$ be closed sets.\\
+$$(A_1\cup B_1\cup C_1\cup\textcolor{blue}{\cdots})\bigcup(A_2\cup B_2\cup C_2\cup\textcolor{blue}{\cdots})\bigcup\textcolor{red}{\cdots}$$
+The \textcolor{blue}{$\cdots$} come from the definition of $F_\sigma$, and the \textcolor{red}{$\cdots$} from the supposition that there is a countable union of $F_\sigma$ sets.\\
+Note, a $\mathbb{N}\times\mathbb{N}$ mapping can be made, with the first element being which $F_\sigma$ set is considered ($\textcolor{red}{\cdots}$) , and the second being which closed set is being considered ($\textcolor{blue}{\cdots}$).\\
+This mapping is countable, so the set itself is a set of countable unions.\\
+$\therefore$ The \underline{countable} union of $F_\sigma$ sets is an $F_\sigma$ set.\\
+$\mathcal{QED}$
+
+}
+\end{homeworkSection}
+\newpage
+\newcommand*{\medcap}{\mathbin{\scalebox{1.5}{\ensuremath{\cap}}}}
+\newcommand*{\medcup}{\mathbin{\scalebox{1.5}{\ensuremath{\cup}}}}
+\begin{homeworkSection}{(b)}
+Assume \underline{countable} and prove/disprove.\\
+The \underline{\qquad} intersection of $F_\sigma$ sets is an $F_\sigma$ set.
+\sectionAnswer{
+%%Come up with $F_sigma$ set that isn't countably intersecting to be $F_\sigma$ set.\\
+$\mathbb{I}=\mathbb{Q}^c=\big[ \bigcup^\infty_{m=1}\{q_m\} \big]^c=\bigcap^\infty_{m=1}\{q_m\}^c$. Note $\{q_m\}$ is closed, so $\{q_m\}^c$ is open.\\
+$\{q_m\}^c=(-\infty,q_m)\cup(q_m,\infty)$\\
+Let $A_n=$
+\left\{
+\begin{array}{left}
+&[-n,q_m-\frac{1}{n}] &, &n\text{ odd}\\
+&[q_m+\frac{1}{n},n] &, &n\text{ even}
+\end{array}
+\right.
+
+Then $\bigcup^\infty_{n=1}A_n=\{ q_m \}^c$\\
+So $\mathbb{I}=\bigcap^\infty_{m=1}\big[ \bigcup^\infty_{n=1}A_n \big]_m$, where $\bigcup^\infty_{n=1}A_n=\{ q_m \}^c$.\\
+So not every countable intersection of $F_\sigma$ sets is $F_\sigma$.\\
+$\therefore$ the \underline{finite} intersection of $F_\sigma$ sets is $F_\sigma$.\\
+$\mathcal{QED}$
+}
+\end{homeworkSection}
+
+\begin{homeworkSection}{(c)}
+Assume \underline{countable} and prove/disprove.\\
+The \underline{\qquad} union of $G_\delta$ sets is a $G_\delta$ set.
+\sectionAnswer{
+$\mathbb{Q}=\bigcup^\infty_{n=1}\{q_n\}$\\
+Let $\Psi_m=$
+\left\{
+\begin{array}{left}
+&(-m,q_m+\frac{1}{m}) &, &m\text{ odd}\\
+&(q_m-\frac{1}{m},m) &, &m\text{ even}
+\end{array}
+\right.
+
+Then $\bigcap^\infty_{m=1}\Psi_m=\{q_n\}$.\\
+So $\bigcup^\infty_{n=1}\big[ \bigcap^\infty_{m=1}\Psi_m \big]_n=\mathbb{Q}$, where $\bigcap^\infty_{m=1}={q_n}$\\
+$\therefore$ the \underline{finite} union of $G_\delta$ sets is $G_\delta$\\
+$\mathcal{QED}$
+
+}
+\end{homeworkSection}
+
+\begin{homeworkSection}{(d)}
+The \underline{\qquad} intersection of $G_\delta$ sets is a $G_\delta$ set.
+\sectionAnswer{
+Assume \underline{countable} and prove/disprove.\\
+$\bigcap^{\infty}_{m=1}(\cap^\infty_{n=1}\Psi_n)_m \overset{?}{=} G_\delta$; where $\Psi_n$ are open sets.\\
+Let $\Psi_n=A, B, \cdots$ be open sets.\\
+$$(A_1\cap B_1\cap C_1\cap\textcolor{blue}{\cdots})\bigcap(A_2\cap B_2\cap C_2\cap\textcolor{blue}{\cdots})\bigcap\textcolor{red}{\cdots}$$
+The \textcolor{blue}{$\cdots$} come from the definition of $G_\delta$, and the \textcolor{red}{$\cdots$} from the supposition that there is a countable union of $G_\delta$ sets.\\
+Note, a $\mathbb{N}\times\mathbb{N}$ mapping can be made, with the first element being which $G_\delta$ set is considered ($\textcolor{red}{\cdots}$) , and the second being which open set is being considered ($\textcolor{blue}{\cdots}$).\\
+This mapping is countable, so the set itself is a set of countable intersections.\\
+$\therefore$ The \underline{countable} intersection of $G_\delta$ sets is an $G_\delta$ set.\\
+$\mathcal{QED}$
+
+}
+\end{homeworkSection}
+
+\end{homeworkProblem}
+
+\newpage
+\begin{homeworkProblem}[3.5.3]
+% \problemAnswer{
+% \underline{Notes for the Problem}\\
+% It will largely help to consider $(a,b]$ as $[a+\epsilon,b]$.
+% }
+
+\begin{homeworkSection}{(a)}
+Show that a closed interval $[a, b]$ is a $G_\delta$ set.
+\sectionAnswer{
+$[a,b]\overset{?}{=}\bigcap^\infty_{n=1}\Psi_n$\\
+%So find some $\Psi_n$ that can cover $[a,b]$.\\
+Let $\Psi_n=(a-\frac{1}{n},b+\frac{1}{n})$ Note that $\Psi_n$ are nested intervals.\\
+Show $(i)$ if $x\in[a,b]$, then $x\in G_{\delta}$ and $(ii)$ if $x\in G_{\delta}$, then $x\in[a,b]$.\\\
+
+$(i)$ $x\in[a,b]$, show $x\in\Psi_n$ for all $n$.\\
+\textbf{Case 1} $x=a$\\
+Then $x>a-\frac{1}{n}$ for all $n$, so $x\in\Psi_n$.\\
+\textbf{Case 2} $x=b$\\
+Then $x<b+\frac{1}{n}$ for all $n$, so $x\in\Psi_n$.\\
+\textbf{Case 3} $a<x<b$\\
+Then $x=a+\epsilon_1$ and $x=b-\epsilon_2$\\
+Since the Archimedean Principle states there exists $n$ large enough $\frac{1}{n}<\epsilon$ for any positive real $\epsilon$, there exists an interval $(a-\frac{1}{n},b+\frac{1}{n})$ such that $a-\frac{1}{n}<x<b+\frac{1}{n}$, namely when $\frac{1}{n}<\min\{\epsilon_1,\epsilon_2\}$.\\
+So $x\in\Psi_n$ for some $n$, but since $\Psi_n$ are nested, $x\in\Psi_n$ for some $n$.\\\
+
+$(ii)$ $x\in\Psi_n$ for all $n$, show $x\in[a,b]$.\\
+Contrapositive is: if $x\notin[a,b]$, then $x\notin\Psi_n$ for all $n$.\\
+\textbf{Case 1} $x<a$\\
+Then let $x=a-\epsilon$ for some $\epsilon>0$.\\
+By the Archimedean Principle, there exists an $n$ such that $\frac{1}{n}<\epsilon$.\\
+So there exists an $n$ such that  $a-\frac{1}{n}>a-\epsilon$.\\
+This implies there exists an $x$ that is not in some $\Psi_n$.\\
+\textbf{Case 2} $x>b$\\
+Then let $x=b+\epsilon$ for some $\epsilon>0$.\\
+By the Archimedean Principle, there exists an $n$ such that $\frac{1}{n}<\epsilon$.\\
+So there exists an $n$ such that  $b+\frac{1}{n}<b+\epsilon$.\\
+This implies there exists an $x$ that is not in some $\Psi_n$.\\
+$\mathcal{QED}$\\\
+
+Similarly, an open interval $(a,b)$ is an $F_\sigma$ set.
+}
+\end{homeworkSection}
+
+\newpage
+\begin{homeworkSection}{Similar statement to (a); lemma for 3.5.2}
+Show that an open interval $(a, b)$ is an $F_\sigma$ set.
+\sectionAnswer{
+$(a,b)\overset{?}{=}\bigcup^\infty_{n=1}\Phi_n$\\
+%So find some $\Phi_n$ that can cover $(a,b)$.\\
+Let $\Phi_n=[a+\frac{1}{n},b-\frac{1}{n}]$ \\
+Show $(i)$ if $x\in(a,b)$, then $x\in F_{\sigma}$ and $(ii)$ if $x\in F_{\sigma}$, then $x\in(a,b)$.\\\
+
+$(i)$ $x\in(a,b)$, show $x\in\Phi_n$ for some $n$.\\
+$a<x<b$\\
+Then $x=a+\epsilon_1$ and $x=b-\epsilon_2$\\
+Since the Archimedean Principle states there exists $n$ large enough $\frac{1}{n}<\epsilon$ for any positive real $\epsilon$, there exists an interval $[a+\frac{1}{n},b-\frac{1}{n}]$ such that $a+\frac{1}{n}<x<b-\frac{1}{n}$, namely when $\frac{1}{n}<\min\{\epsilon_1,\epsilon_2\}$.\\
+So $x\in\Phi_n$ for some $n$, but since $F_\sigma$ is a union of $\Phi_n$ for all $n$, $x\in F_\sigma$.\\
+
+$(ii)$ $x\in\Phi_n$ for some $n$, show $x\in(a,b)$.\\
+Contrapositive is: if $x\notin(a,b)$, then $x\notin\Phi_n$ for all $n$.\\
+\textbf{Case 1} $x<a$\\
+Then let $x=a-\epsilon$ for some $\epsilon>0$.\\
+Clearly,  $a-\epsilon < a+\frac{1}{n}$, since $\frac{1}{n}>0$.
+
+\textbf{Case 2} $x>b$\\
+Then let $x=b+\epsilon$ for some $\epsilon>0$.\\
+Clearly,  $b+\epsilon > b-\frac{1}{n}$, since $\frac{1}{n}>0$.
+
+\textbf{Case 3} $x=b$\\
+Clearly, $b<b+\frac{1}{n}$.
+
+\textbf{Case 4} $x=a$\\
+Clearly, $a>a-\frac{1}{n}$.\\
+$\mathcal{QED}$
+}
+\end{homeworkSection}
+
+\begin{homeworkSection}{(b)}
+Show that the half-open interval $(a, b]$ is both $(i)$ a $G_\delta$ and $(ii)$ an $F_\sigma$ set.
+\sectionAnswer{
+$(i)$ $(a,b]\overset{?}{=}\bigcap^\infty_{n=1}\Psi_n$, where $\Psi_n$ are open sets.\\
+Let $\Psi_n=(a,b+\frac{1}{n})$.\\
+%No matter how large $n$ gets, $\Psi_n$ still covers the interval; and $\lim\frac{1}{n}=0$, so $\lim b+\frac{1}{n}=b$\\
+%\textcolor{red}{argue that $\lim\Psi_n$ is closed}\\\
+If $x\in(a,b]$, then $a<x<b+\frac{1}{n}$, so clearly $x\in\bigcap^\infty_{n=1}\Psi_n$.\\
+If $x\in(a,b+\frac{1}{n})$ for all $n$, given any $b+\epsilon$ (where $\epsilon>0$), by the Archimedean Principle, there exists an $n$ such that $b+\frac{1}{n}<b+\epsilon$.\\
+So $(a,b]{=}\bigcap^\infty_{n=1}\Psi_n$\\\
+
+$(ii)$ $(a,b]\overset{?}{=}\bigcup^\infty_{n=1}\Phi_n$, where $\Phi_n$ are closed sets.\\
+Let $\Phi_n=[a+\frac{1}{n},b]$.\\
+%As $n$ gets larger, $\Phi_n$ covers more and more of the interval; $\lim\frac{1}{n}=0$, so $\lim a+\frac{1}{n}$ will eventually cover all of the interval.\\
+%\textcolor{red}{argue that $\lim\Psi_n$ is closed}\\
+If $x\in[a+\frac{1}{n},b]$, then $a<x\leq b$, so clearly $x\in(a,b]$.\\
+%fix this stuff
+If $x\in(a,b]$ for all $n$, given any $a+\epsilon$ (where $\epsilon>0$), by the Archimedean Principle, there exists an $n$ such that $a+\frac{1}{n}<a+\epsilon$.\\
+So $(a,b]{=}\bigcap^\infty_{n=1}\Psi_n$\\
+$\mathcal{QED}$
+}
+\end{homeworkSection}
+
+\newpage
+\begin{homeworkSection}{(c)}
+Show that $\mathbb{Q}$ is $(i)$ an $F_\sigma$ set, and $(ii)$ the set of irrationals $I$ forms a $G_\delta$ set.
+\sectionAnswer{
+$(i)$\\
+$\mathbb{Q}$ is countable.\\
+Let $\Phi_n=\mathbb{Q}_n$, where $\mathbb{Q}_n$ is the $n$th element of $\mathbb{Q}$.\\ Note since $\mathbb{Q}_n$ is a single point, as a set, it contains it's (nonexistant) limit points. So $\mathbb{Q}_n$ is closed.\\
+Let $F_\sigma = \bigcup_{n=1}^\infty\mathbb{Q}_n = \mathbb{Q}$.\\\
+
+$(ii)$\\
+$I=\mathbb{Q}^c$\\
+$\mathbb{Q}$ is shown to be an $F_\sigma$ set. In $3.5.1$, it was shown that the complement of an $F_\sigma$ set is a $G_\delta$.\\
+$\therefore I$ is a $G_\delta$ set.\\
+%So $I=(F_\sigma)^c=(\bigcap^\infty_{n=1}\mathbb{Q}_n)^c=\bigcup^\infty_{n=1}(\mathbb{Q}_n)^c$\\
+%Note that since $\mathbb{Q}_n$ is closed, it's complement is open.\\
+%So $I$ is a $G_\delta$ set, by definition.\\
+$\mathcal{QED}$
+}
+\end{homeworkSection}
+
+\end{homeworkProblem}
+
+\newpage
+\begin{homeworkProblem}[3.5.4]
+Prove Theorem 3.5.2:\\
+If ${G_1,G_2,G_3,\cdots}$ is a countable collection of dense, open sets, then the intersection $\bigcap^\infty_{n=1}G_n$ is not empty.\\
+\problemAnswer{
+\textbf{Notes to Help:}\\
+A set $G$ is dense in $\mathbb{R}$ if and only if every point of $\mathbb{R}$ is a limit point of $G$. Because the closure of any set is obtained by taking the union of the set and its limit points, we have that\\
+$$G\text{ is dense in }\mathbb{R}\text{ if and only if }\overline{G}=\mathbb{R}$$
+This also implies that $G$ must be unbounded.
+}
+\begin{homeworkSection}{(a)}
+Starting with $n=1$, inductively construct a nested sequence of \textit{closed} intervals $I_1\supseteq I_2\supseteq I_3\supseteq\cdots$ satisfying $I_n\subseteq G_n$. Give special attention to the issue of the endpoints of each $I_n$.\\
+\sectionAnswer{
+Let all $\epsilon$ be greater than zero.\\
+Assuming $G$ is nonempty, there exists some $g\in G$.\\
+$G$ is open, so there exists some $\epsilon>0$ such that $V_\epsilon(g)\subseteq G$. That is, $(g-\epsilon_1,g+\epsilon_1)\subseteq G$\\
+Let $\epsilon_2<\epsilon_1$, and $\epsilon_3=\epsilon_1-\epsilon_2$. Now, let $I_1=[g-\epsilon_3,g+\epsilon_3]$. Then $I_1$ is closed, and also within $G$, since $I_1\subset V_\epsilon(g)\subset G$. For simplicity, let $I_1=[a,b]$.\\
+Since $G$ is dense, there exists some $g_1$ such that $a<g_1<b$.\\
+Since $G$ is open, there exists some neighborhood around $g_1$ that is a subset of $G$. Also note that every neighborhood smaller than that neighborhood is also a subset of $G$.\\
+Let $\epsilon_4=\min\{ |g_1-a|,|g_1-b| \}$. $V_{\epsilon_4}(g_1)\subseteq I_1$.\\
+%like before, we want a CLOSED interval. So:\\
+Let $\epsilon_5<\epsilon_4$. Now, let $I_2=[g_1-\epsilon_5,g_1+\epsilon_5]$. Then $I_2$ is closed, and also within $G$, since $I_2\subset I_1 \subset G$.\\\
+
+Generally, there is always some $g_n \in I_n$. Let $\epsilon_m$ be less than the distance between $g_n$ and either end of some neighborhood within $I_n$. Then let  $I_{n+1}=[g_n-\epsilon_m,g_n+\epsilon_m]$. By construction, this will always be within $I_n$ and thus within $G$, and closed.\\
+$\mathcal{QED}$
+}
+\end{homeworkSection}
+\begin{homeworkSection}{(b)}
+Now, use Theorem 3.3.5 ('Nested Compact Set Property') or the Nested Interval Property to finish the proof.\\
+\sectionAnswer{
+Above was shown a construction of $I_n\subset G$, where $G$ is an arbitrary dense set. Instead of taking an arbitrary $g$ in each interval $I_n$, take $g_2$ from $G_2$ in $I_1$, $g_3$ from $G_3$ in $I_2$, $\cdots$, $g_{n+1}$ from $G_{n+1}$ in $I_n$. Then $I_n$ is in $G_n$.\\
+Then, since $\bigcap^\infty_{n=1}I_n$ is nonempty, so is $\bigcap^\infty_{n=1}$; since $\bigcap^\infty_{n=1}I_n\subset\bigcap^\infty_{n=1}$\\
+$\mathcal{QED}$
+}
+\end{homeworkSection}
+\end{homeworkProblem}
+
+\newpage
+\begin{homeworkProblem}[3.5.5]
+Show that it is impossible to write
+$$\mathbb{R}=\bigcup^\infty_{n=1}F_n,$$
+where for each $n\in\mathbb{N}$, $F_n$ is a closed set containing no nonempty open intervals.\\
+  \problemAnswer{
+  \textbf{Lemma}\\
+  $$\forall x, x\notin A$$
+  $$\Rightarrow \forall x, x\in A^c$$
+  Whether or not $x$ happens to be a nonempty open interval, this is clearly the case.
+  }
+\problemAnswer{
+If $$\mathbb{R}=\bigcup^\infty_{n=1}F_n$$
+$$\emptyset=\mathbb{R}^c=\bigcap^\infty_{n=1}F_n^c$$
+Note that $F_n$ contains NO nonempty open intervals. So it's complement, $F_n^c$ contains every nonempty open interval. So they all contain, for example $(0,1)$. So $\bigcap^\infty_{n=1}F_n^c$ contains $(0,1)$. This contradicts that the intersection must be empty.\\
+So it is impossible that $\mathbb{R}=\bigcup^\infty_{n=1}F_n$\\
+$\mathcal{QED}$
+}
+\end{homeworkProblem}
+\newpage
+
+\begin{homeworkProblem}[3.5.6]
+Show how the previous exercise implies that the set $\mathbb{I}$ of irrationals cannot be an $F_\sigma$ set, and $\mathbb{Q}$ cannot be a $G_\delta$ set.\\
+\problemAnswer{
+Let $F_n$ be closed sets containing no nonempty open intervals.\\
+$\mathbb{R}\neq \bigcup^\infty_{n=1}F_n$\\
+\textbf{Proof by Contradiction:} Assume $\mathbb{I}=\bigcap^\infty_{n=1}\Phi_n$, where $\Phi_n$ are closed sets.\\
+%If some $\Phi_k$ (for some $k$), contains an interval, then $\mathbb{I}$ contains $\Phi_k$ contains that interval.\\
+%But 
+$\mathbb{I}$ cannot contain any open interval, since $\mathbb{Q}(=\mathbb{I}^c)$ is dense.\\
+Since $\mathbb{Q}$ is countable, let $\mathbb{Q}=\bigcup^\infty_{i=1}\{q_i\}$, where $q_i$ are points in $\mathbb{Q}$. Note that these singleton sets contain no intervals, so their union contains no intervals.
+$$ \mathbb{R}=\mathbb{I}\bigcup^\infty_{i=1}\{q_i\} $$
+But $\mathbb{R}\neq \bigcup^\infty_{n=1}F_n$.\\
+So there is a contradiction. So the opposite is true:\\
+$\mathbb{I}$ cannot be an $F_\sigma$ set.\\\
+
+By question $3.5.1$, this also implies that $\mathbb{I}^c=\mathbb{Q}$ cannot be a $G_\delta$ set.\\
+$\mathcal{QED}$
+}
+
+\end{homeworkProblem}
+
+\newpage
+\begin{homeworkProblem}[3.5.7]
+Using Exercise 3.5.6 and versions of the statements in 3.5.2, construct a set that is neither in $F_\sigma$ nor in $G_\delta$.\\
+\problemAnswer{
+Consider the set $\big(\mathbb{Q}\cap(-\infty,0]\big)\bigcup\big(\mathbb{I}\cap(0,\infty)\big)$.\\
+Since $\mathbb{I}$ is not an $F_\sigma$ set, and $\mathbb{Q}$ is not a $G_\delta$ set, this new set is in neither $F_\sigma$ nor $G_\delta$.\\
+$\mathcal{QED}$
+}
+\end{homeworkProblem}
+
+\newpage
+\begin{homeworkProblem}[3.5.8]
+Show that a set $E$ is nowhere-dense in $\mathbb{R}$ if and only if the complement of $\overline{E}$ is dense in $\mathbb{R}$.\\
+\problemAnswer{
+\textbf{Notes to Help:}\\
+A set $G$ is dense if and only if $\overline{G}=\mathbb{R}$.\\
+A set $E$ is nowhere-dense if $\overline{E}$ contains no nonempty open intervals.\\
+$\overline{E}^c=(E^c)^o$\\
+$(E^o)^c=\overline{E^c}$\\
+$\overline{E}=E\bigcup E_L$\\
+$E^o=E-E_L$
+}
+\problemAnswer{
+$(\Rightarrow)$ If $E$ is nowhere-dense in $\mathbb{R}$, then $\overline{E}\;^c$ is dense in $\mathbb{R}$.\\
+$\forall(a,b),(a,b)\notin\overline{E}\rightarrow\overline{\overline{E}^c}=\mathbb{R}$\\
+For contradiction, assume $\forall(a,b),(a,b)\not\subseteq\overline{E}\wedge\overline{\overline{E}^c}\not=\mathbb{R}$\\
+So $\exists\; x\in\mathbb{R}
+\;|\;x
+\left\{\begin{array}{left} 
+    &\notin \overline{E}^c\rightarrow x\in\overline{E} \\
+    &\notin \text{limpoint }\overline{E}^c
+\end{array}\right.$\\
+Since $(a,b)\not\subseteq\overline{E}$, every neighborhood of $x$, $V_\epsilon(x)\bigcap\overline{E}^c\neq\emptyset$.\\
+Notice that this is the very definition of limit point. $x\in\text{limpoint }\overline{E}^c$.\\
+But $x\notin \text{limpoint }\overline{E}^c$.\\
+This is a contradiction, so the opposite of our assumption is true:\\
+If $E$ is nowhere-dense in $\mathbb{R}$, then $\overline{E}^c$ is dense in $\mathbb{R}$.\\\
+
+$(\Leftarrow)$ If $\overline{E}\;^c$ is dense in $\mathbb{R}$, then $E$ is nowhere-dense in $\mathbb{R}$.\\
+\textbf{Contrapositive:} if $E$ is somewhere-dense in $\mathbb{R}$, then $\overline{E}^c$ is not dense in $\mathbb{R}$.\\
+So there exists some $(a,b)$ in $\overline{E}$.\\
+Then, $(a,b)$ is not in $\overline{E}^c$.\\
+The midpoint of $(a,b)$ is $a+\frac{b-a}{2}$. Note: since the midpoint of $(a,b)$ is in $(a,b)$, the midpoint is not in $\overline{E}^c$, nor is it a limit point of $\overline{E}^c$ since $V_\epsilon(a+\frac{b-a}{2})\in(a,b)$ when $\epsilon<\frac{b-a}{2}$.\\
+So $a+\frac{b-a}{2}$ is not in $\overline{\overline{E}^c}$. Yet, clearly $a+\frac{b-a}{2}$ is in $\mathbb{R}$.\\
+Therefore, $\overline{E}^c$ is not dense, by definition.\\
+$\mathcal{QED}$
+}
+
+\end{homeworkProblem}
+
+
+\newpage
+\begin{homeworkProblem}[3.5.9]
+Decide whether the following sets are dense in $\mathbb{R}$, nowhere-dense in $\mathbb{R}$, or somewhere in between.
+
+\begin{homeworkSection}{(a)}
+$A=\mathbb{Q}\cup[0,5]$
+\sectionAnswer{
+A dense set is unbounded, so $A$ is not dense.\\
+Yet $\mathbb{Q}$ is dense, so $A$ is not nowhere-dense.\\
+$\therefore A$ is somewhere in between.\\
+$\mathcal{QED}$
+}
+\end{homeworkSection}
+
+\begin{homeworkSection}{(b)}
+$B={1/n:n\in\mathbb{N}}$
+\sectionAnswer{
+A dense set is unbounded, so $B$ is not dense.\\
+The closure of this set includes all it's limit points, which is just $0$. There are no intervals in $1/n\cup0$.\\
+$\therefore B$ is nowhere-dense.\\
+$\mathcal{QED}$
+}
+\end{homeworkSection}
+
+\begin{homeworkSection}{(c)}
+the set of irrationals.
+\sectionAnswer{
+Between any two rationals there is an irrational: take the decimal form of all the rationals: either they repeat, or they end. Given any two rationals, look at the first instance at which the decimals do not match. Take the lower rational number, and increase the following digit by 1. Then randomize a never-ending chain of digits thereafter. We have constructed an irrational between two arbitrary rationals.\\
+So the irrationals are dense in the rationals. Since the rationals are dense in the reals, two rationals can be found between any two reals, and an irrational can be found between THOSE. That number is between the two original reals.\\
+$\therefore$ the set of irrationals are dense.\\
+$\mathcal{QED}$
+}
+\end{homeworkSection}
+
+\begin{homeworkSection}{(d)}
+the Cantor set.
+\sectionAnswer{
+A dense set is unbounded, so the Cantor set is not dense.\\
+The Cantor set is closed, since it's the arbitrary intersection of closed sets. So the closure of the Cantor set is the Cantor set.\\
+The Cantor set also has no intervals, since it's length, computed before, is zero.\\
+So the closure of the Cantor set contains no intervals.\\
+$\therefore$ the Cantor set is nowhere-dense.\\
+$\mathcal{QED}$
+}
+\end{homeworkSection}
+
+\end{homeworkProblem}
+
+\newpage
+\begin{homeworkProblem}[3.5.10]
+\textbf{Theorem 3.5.4 (Baire's Theorem).} The set of real numbers $\mathbb{R}$ cannot be written as the countable union of nowhere-dense sets.\\
+\textit{Proof.} For contradiction, assume that $E_1,E_2,E_3,\ldots$ are each nowhere-dense and satisfy $\mathbb{R}=\bigcup^\infty_{n=1}E_n$.
+\noindent
+Finish the proof by finding a contradiction to the results in this section.\\
+\problemAnswer{
+Since $E_n$ are nowhere-dense, their closures contain no open intervals. So $\mathbb{R}\neq\bigcup^\infty_{n=1}\overline{E_n}$.\\
+$\bigcup^\infty_{n=1}\overline{E_n}$ is clearly not bigger than $\mathbb{R}$, so $\bigcup^\infty_{n=1}\overline{E_n}\subset\mathbb{R}$.\\
+Furthermore, the closure of a set is that set union with it's limit points. So $\bigcup^\infty_{n=1}E_n\subset\bigcup^\infty_{n=1}\overline{E_n}\subset\mathbb{R}$.\\
+So $\mathbb{R}\supset\bigcup^\infty_{n=1}E_n$. This contradicts that $\mathbb{R}=\bigcup^\infty_{n=1}E_n$.\\ 
+%problem that this is direct?\\
+$\therefore$ $\mathbb{R}$ cannot be written as the countable union of nowhere-dense sets.\\
+$\mathcal{QED}$
+}
+
+\end{homeworkProblem}
+
+
+\end{spacing}
+\end{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------%
+% The following is copyright and licensing information for
+% redistribution of this LaTeX source code; it also includes a liability
+% statement. If this source code is not being redistributed to others,
+% it may be omitted. It has no effect on the function of the above code.
+%----------------------------------------------------------------------%
+% Copyright (c) 2007, 2008, 2009, 2010, 2011 by Theodore P. Pavlic
+%
+% Unless otherwise expressly stated, this work is licensed under the
+% Creative Commons Attribution-Noncommercial 3.0 United States License. To
+% view a copy of this license, visit
+% http://creativecommons.org/licenses/by-nc/3.0/us/ or send a letter to
+% Creative Commons, 171 Second Street, Suite 300, San Francisco,
+% California, 94105, USA.
+%
+% THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+% OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+% MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+% IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+% CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+% TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+% SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+%----------------------------------------------------------------------%
